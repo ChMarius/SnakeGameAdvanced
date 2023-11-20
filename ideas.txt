@@ -1,0 +1,11 @@
+Print the map, depending on the score
+Increase the width and height the map by multiplying with a variable???
+    int level=1;
+        height*=level;
+        width*=level;
+    Everytime, the player goes to the next level, the map increases.   
+
+Level = 1  2  3  4 
+Score = 0  4  8  12
+
+Correct "the exit the game" output
