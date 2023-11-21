@@ -12,6 +12,7 @@ int x,y,fruitX,fruitY,Score;
 int tailX[100], tailY[100];
 int bombX,bombY;
 int nTail;
+int pace=60;
 enum eDirection {Stop=0,Left,Right,Up,Down};
 eDirection dir;
 bool isChanged=1, exitByChoice=0;
@@ -77,6 +78,7 @@ void Draw()
         height+=3;             //*=level-1;
         width+=6;             //*=level-1;
         Score=0;
+        pace-=8;
         isChanged=1;
     }
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), {0,0});
@@ -199,7 +201,7 @@ int main()
         Draw();
         Input();
         Logic();
-        Sleep(60); // Slows the pace of the snake
+        Sleep(pace); // Slows the pace of the snake
     }
     if(gameOver){system("cls");}
   }

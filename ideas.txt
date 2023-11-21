@@ -8,4 +8,4 @@ Increase the width and height the map by multiplying with a variable???
 Level = 1  2  3  4 
 Score = 0  4  8  12
 
-Correct "the exit the game" output
+?? Implement another function for level changes and level checking
