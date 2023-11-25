@@ -5,7 +5,6 @@
 
 
 bool gameOver;
-using namespace std;
 int width=10, height=10;
 int level=1;
 int x,y,fruitX,fruitY,Score;
@@ -24,20 +23,20 @@ bool introToGame()
     char choice;
     // Introduces the player to the game
     if(!gameOver){
-    cout<<"Welcome to the Snake Game!"<<endl;
-    cout<<endl;
-    cout<<"Would you like to play to play the game? Type Y for yes and N for no "<<endl;
+    std::cout<<"Welcome to the Snake Game!"<<std::endl;
+    std::cout<<std::endl;
+    std::cout<<"Would you like to play to play the game? Type Y for yes and N for no "<<std::endl;
     }
-    else if (exitByChoice) {cout<<"You exited the game! Would you like to play again? Type Y for yes and N for no"<<endl;}
-    else {cout<<"Oops, you lost. Would you like to play again? Type Y for yes and N for no"<<endl;}
+    else if (exitByChoice) {std::cout<<"You exited the game! Would you like to play again? Type Y for yes and N for no"<<std::endl;}
+    else {std::cout<<"Oops, you lost. Would you like to play again? Type Y for yes and N for no"<<std::endl;}
     while(true){
-        cout<<">";cin>>choice;
+        std::cout<<">"; std::cin>>choice;
         if(toupper(choice)=='Y') {return true;}
         if(toupper(choice)=='N'){ 
-            cout<<"That's unfortunate :( Have a nice day! ";
+            std::cout<<"That's unfortunate :( Have a nice day! ";
             return false;}
         // If input is valid, it returns the player to the first line of the while loop to place an input again
-        else {cout<<"Invalid Input. Please choose Y or N"<<endl; continue; }
+        else {std::cout<<"Invalid Input. Please choose Y or N"<<std::endl; continue; }
         }
 }
 
@@ -46,20 +45,20 @@ bool introToGame()
 
 void Setup()
 {
-    
     // Everytime we press to start the game again after losing, we reset the tail
     nTail=0;
     tailX[0]=0;tailY[0]=0;
     // Placement of the bomb is done randomly
     width=10; 
     height=10;
+    // Placement of the head is done in the center
+    x=width/2;
+    y=height/2;
+    // Placement of bomb is done randomly
     bombX=rand()%width;
     bombY=rand()%height;
     gameOver=false;
     dir=Stop;
-    // Placement of the head is done in the center
-    x=width/2;
-    y=height/2;
     // The placement of fruit is done randomly
     fruitX=rand()%width;
     fruitY=rand()%height;
@@ -68,11 +67,9 @@ void Setup()
     exitByChoice=0;
 }
 
-
-// Building the terrain, the snake and printing the fruit
-void Draw()
+void LevelCheck()
 {
-    /*else if(Score>10){level=3;}
+     /*else if(Score>10){level=3;}
     else if(Score>15){level=4;}*/
     if(level>2 && isChanged==0){
         height+=3;             //*=level-1;
@@ -81,38 +78,44 @@ void Draw()
         pace-=8;
         isChanged=1;
     }
+}
+
+
+// Building the terrain, the snake and printing the fruit
+void Draw()
+{ 
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), {0,0});
-    for(int j=0;j<=width+1;j++) {cout<<"#";}// The first # is 0 and the last # is 22, in order to have the width=20
-    cout<<endl;
+    for(int j=0;j<=width+1;j++) {std::cout<<"#";}// The first # is 0 and the last # is 22, in order to have the width=20
+    std::cout<<std::endl;
     for (int i=0;i<=height;i++){
         for(int j=0;j<=width;j++){
-            if(j==0) {cout<<"#";} // Prints the left wall
-            if(i==y && j==x) {cout<<"O";} // Prints the head of the snake
-            else if(i==fruitY && j==fruitX) {cout<<"F";} // Prints (randomly) the fruit
-            else if(bombX==j && bombY==i) {cout<<"+";}
+            if(j==0) {std::cout<<"#";} // Prints the left wall
+            if(i==y && j==x) {std::cout<<"O";} // Prints the head of the snake
+            else if(i==fruitY && j==fruitX) {std::cout<<"F";}
+            else if(bombX==j && bombY==i) {std::cout<<"+";} 
             else 
             {
                 bool print=false;
                 for(int k=0;k<nTail;k++){
                     
-                    if(tailX[k]==j && tailY[k]==i){cout<<"o"; print=true;}// Prints the tail if coordinates of tailX and tailY (from logic function) are equal to i and j
+                    if(tailX[k]==j && tailY[k]==i) {std::cout<<"o"; print=true;}// Prints the tail if coordinates of tailX and tailY (from logic function) are equal to i and j
                     
                 }
-                if(!print){cout<<" ";}// Prints the whole 20x20 terrain
+                if(!print) {std::cout<<" ";}// Prints the whole 20x20 terrain
             }
             if(bombX==fruitX && bombY==fruitY){
                 fruitX=rand()%width;
                 fruitY=rand()%height;
             } 
              
-            if(j==width-1) {cout<<"#";} // Prints the right wall
+            if(j==width-1) {std::cout<<"#";} // Prints the right wall
         }
-        cout<<endl;
+        std::cout<<std::endl;
     }
-    for(int j=0;j<=width+1;j++){cout<<"#";} // Prints the bottom wall
-    cout<<endl;
-    cout<<"Score:"<<Score<<endl;
-    cout<<"Level:"<<level-1<<endl;
+    for(int j=0;j<=width+1;j++) {std::cout<<"#";} // Prints the bottom wall
+    std::cout<<std::endl;
+    std::cout<<"Score:"<<Score<<std::endl;
+    std::cout<<"Level:"<<level-1<<std::endl;
 }
 
 
@@ -157,7 +160,7 @@ void Logic()
 
     switch(dir)
     {
-        // By each direction, we increment or decrement the x or the y(x=width, y=height)
+        // By each direction, we increment or decrement the x or the y (x=width, y=height)
         case Left:
          x--;
          break;
@@ -184,8 +187,8 @@ void Logic()
         Score++;
         fruitX=rand()%width;
         fruitY=rand()%height;
-        isChanged=0;
-        if(Score>=3) {level++;}
+        
+        if(Score%5==0) {level++; isChanged=0;}
 
     } 
     
@@ -198,6 +201,7 @@ int main()
       system("cls");
       Setup();
       while(!gameOver){
+        LevelCheck();
         Draw();
         Input();
         Logic();
