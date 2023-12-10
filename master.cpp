@@ -5,13 +5,14 @@
 
 
 bool gameOver;
-int width=10, height=10;
 int level=1;
+int width,height;
 int x,y,fruitX,fruitY,Score;
 int tailX[100], tailY[100];
 int bombX,bombY;
 int nTail;
 int pace=60;
+int nrBombs=2;
 enum eDirection {Stop=0,Left,Right,Up,Down};
 eDirection dir;
 bool isChanged=1, exitByChoice=0;
@@ -54,9 +55,6 @@ void Setup()
     // Placement of the head is done in the center
     x=width/2;
     y=height/2;
-    // Placement of bomb is done randomly
-    bombX=rand()%width;
-    bombY=rand()%height;
     gameOver=false;
     dir=Stop;
     // The placement of fruit is done randomly
@@ -64,13 +62,17 @@ void Setup()
     fruitY=rand()%height;
     Score=0;// Everytime the snake catches the a fruit, we increment the score with 1
     level=2;
+    bombX=rand()%width;
+    bombY=rand()%height;
+    if(bombX==fruitX && bombY==fruitY && bombX==x && bombY==y){
+        fruitX=rand()%width;
+        fruitY=rand()%height;
+    }
     exitByChoice=0;
 }
 
 void LevelCheck()
 {
-     /*else if(Score>10){level=3;}
-    else if(Score>15){level=4;}*/
     if(level>2 && isChanged==0){
         height+=3;             //*=level-1;
         width+=6;             //*=level-1;
@@ -88,11 +90,11 @@ void Draw()
     for(int j=0;j<=width+1;j++) {std::cout<<"#";}// The first # is 0 and the last # is 22, in order to have the width=20
     std::cout<<std::endl;
     for (int i=0;i<=height;i++){
-        for(int j=0;j<=width;j++){
+        for(int j=0;j<=width;j++){ 
             if(j==0) {std::cout<<"#";} // Prints the left wall
             if(i==y && j==x) {std::cout<<"O";} // Prints the head of the snake
             else if(i==fruitY && j==fruitX) {std::cout<<"F";}
-            else if(bombX==j && bombY==i) {std::cout<<"+";} 
+            else if(bombX==j && bombY==i) {std::cout<<"+";}
             else 
             {
                 bool print=false;
@@ -102,12 +104,7 @@ void Draw()
                     
                 }
                 if(!print) {std::cout<<" ";}// Prints the whole 20x20 terrain
-            }
-            if(bombX==fruitX && bombY==fruitY){
-                fruitX=rand()%width;
-                fruitY=rand()%height;
             } 
-             
             if(j==width-1) {std::cout<<"#";} // Prints the right wall
         }
         std::cout<<std::endl;
@@ -177,9 +174,9 @@ void Logic()
          dir=Stop;
          break;
     }
-    if(x>=width || x<0 || y>=height+1 || y<0 || (y==bombY && x==bombX)) {gameOver=true;} // If the snake crosses the border, the game stops
+    if(x>=width || x<0 || y>=height+1 || y<0 || bombX==x || bombY==y) {gameOver=true;} // If the snake crosses the border, the game stops
     for(int i=0;i<nTail;++i){
-        if(tailX[i]==x && tailY[i]==y) {gameOver=true;} //If the snake touches itself, the game stops
+        if(tailX[i]==x && tailY[i]==y ) {gameOver=true;} //If the snake touches itself, the game stops
     }
     
     if(x==fruitX && y==fruitY ){ // Everytime the snake eats the fruit, the tail is incremented and the fruit is randomly placed
